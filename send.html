@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Message</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.30.0/dist/umd/supabase.min.js"></script>
+    <script>
+        // Initialize the Supabase client
+        const SUPABASE_URL = 'https://cdfzkwcluplyetqbuqmg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkZnprd2NsdXBseWV0cWJ1cW1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxMzQ3MTksImV4cCI6MjAzMTcxMDcxOX0.HMxwvs7Vi2NH4-5uwAR561vtpZCDeOHc7uiS_cJAIuw';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function sendMessage() {
+            const message = document.getElementById('message').value;
+            const { error } = await supabaseClient
+                .from('broadcast')
+                .insert([{ message }]);
+            if (error) {
+                console.error('Error inserting message:', error.message);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Send Message</h1>
+    <input type="text" id="message" placeholder="Enter your message">
+    <button onclick="sendMessage()">Submit</button>
+</body>
+</html>
