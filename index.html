@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konser</title>
+    <style>
+        body {
+            background-color: #fa4040;
+            margin: 0; /* Reset default margin */
+            padding: 0; /* Reset default padding */
+        }
+        .ustyazi {
+            background-color: #ff6161;
+            overflow: hidden;
+        }
+        .ustyazi h2 {
+            color: #fafafa;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 20px;
+            margin: 0; /* Reset default margin */
+        }
+        .ortayazi {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+        .ortayazi h1 {
+            margin: 0; /* Reset default margin */
+        }
+        .ortayazi a {
+            text-decoration: none;
+            color: white;
+            font-size: 30px;
+            display: block;
+            margin-top: 20px;
+        }
+        #pdfContainer {
+            display: none;
+            width: 80%;
+            height: 80%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 10px;
+            z-index: 9999;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        .backButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #ff6161;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #pdfViewer {
+            width: 100%;
+            height: calc(100% - 60px); /* Adjust height for the back button */
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ustyazi">
+        <h2>İzlem Ozdemirci</h2>
+    </div>
+    <div class="ortayazi">
+        <h1>{Konser İsmi}'ne Hoşgeldiniz</h1>
+        <a href="#" onclick="openPdf('Konser Afisi_2024 (1).pdf')">Broşüre Gözat</a>
+        <a href="#">Live View</a>
+    </div>
+
+    <!-- PDF Container -->
+    <div id="pdfContainer">
+        <button class="backButton" onclick="closePdf()">Back</button>
+        <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+    </div>
+
+    <script>
+        function openPdf(pdfUrl) {
+            // Display the PDF container
+            document.getElementById('pdfContainer').style.display = 'block';
+            // Set the PDF URL
+            document.getElementById('pdfViewer').src = pdfUrl;
+        }
+
+        function closePdf() {
+            // Hide the PDF container
+            document.getElementById('pdfContainer').style.display = 'none';
+            // Clear the PDF URL
+            document.getElementById('pdfViewer').src = '';
+        }
+    </script>
+</body>
+</html>
