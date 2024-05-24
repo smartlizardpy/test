@@ -2,28 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receive Message</title>
+    <style>
+       
+        .ok {
+        font-family: "Quicksand", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
+        }
+        #icerik{
+            font-family: "Quicksand", sans-serif;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.30.0/dist/umd/supabase.min.js"></script>
     <script>
         // Initialize the Supabase client
         const SUPABASE_URL = 'https://cdfzkwcluplyetqbuqmg.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkZnprd2NsdXBseWV0cWJ1cW1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxMzQ3MTksImV4cCI6MjAzMTcxMDcxOX0.HMxwvs7Vi2NH4-5uwAR561vtpZCDeOHc7uiS_cJAIuw';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkZnprd2NsdXBseWV0cWJ1cW1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxMzQ3MTksImV4cCI6MjAzMTcxMDcxOX0.HMxwvs7Vi2NH4-5uwAR561vtpZCDeOHc7uiS_cJAIuw');
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const h1 = document.getElementById('messageDisplay');
+            const icerikDiv = document.getElementById('icerik');
 
+            // Function to fetch the latest message from the database
+            const fetchLatestMessage = async () => {
+                const { data, error } = await supabaseClient
+                    .from('broadcast')
+                    .select('message')
+                    .order('id', { ascending: false })
+                    .limit(1);
+                
+                if (error) {
+                    console.error('Error fetching latest message:', error.message);
+                    return null;
+                }
+
+                return data[0]?.message || "No message found";
+            };
+
+            // Display the latest message
+            const displayLatestMessage = async () => {
+                const latestMessage = await fetchLatestMessage();
+                
+                if (!latestMessage || latestMessage === "No message found") {
+                    h1.textContent = 'Please wait to be seated';
+                    icerikDiv.innerHTML = '';
+                    return;
+                }
+
+                h1.textContent = '';
+
+                // Parse JSON data and display content
+                try {
+                    const veri = JSON.parse(latestMessage);
+                    if (typeof veri === 'object' && veri !== null && veri.hasOwnProperty('isim')) {
+                        let icerikHTML = '<h1>' + veri.isim + '</h1>';
+                        if (veri.hasOwnProperty('şarkılar') && Array.isArray(veri.şarkılar) && veri.şarkılar.length > 0) {
+                            icerikHTML += '<ul>';
+                            veri.şarkılar.forEach(function(sarki) {
+                                icerikHTML += '<li>' + sarki + '</li>';
+                            });
+                            icerikHTML += '</ul>';
+                        }
+                        if (veri.hasOwnProperty('sirada')) {
+                            icerikHTML += '<p>Sırada: ' + veri.sirada + '</p>';
+                        }
+                        icerikDiv.innerHTML = icerikHTML;
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON:', error.message);
+                    icerikDiv.innerHTML = '<p>Error parsing JSON data</p>';
+                }
+            };
+
+            // Display the latest message initially
+            await displayLatestMessage();
+
+            // Subscribe to new messages
             supabaseClient
                 .from('broadcast')
-                .on('INSERT', payload => {
-                    h1.textContent = payload.new.message;
+                .on('INSERT', async payload => {
+                    await displayLatestMessage();
                 })
                 .subscribe();
         });
     </script>
 </head>
 <body>
-    <h1 id="messageDisplay">Waiting for message...</h1>
+    <h1 id="messageDisplay"></h1>
+    <div id="icerik"></div>
 </body>
 </html>
