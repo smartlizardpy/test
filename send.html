@@ -1,30 +1,452 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Message</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.30.0/dist/umd/supabase.min.js"></script>
-    <script>
-        // Initialize the Supabase client
-        const SUPABASE_URL = 'https://cdfzkwcluplyetqbuqmg.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkZnprd2NsdXBseWV0cWJ1cW1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxMzQ3MTksImV4cCI6MjAzMTcxMDcxOX0.HMxwvs7Vi2NH4-5uwAR561vtpZCDeOHc7uiS_cJAIuw';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <title>Concert Program</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        .poetsen-one-regular {
+    font-family: "Poetsen One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    }
+    .poppins-thin {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
 
-        async function sendMessage() {
-            const message = document.getElementById('message').value;
-            const { error } = await supabaseClient
-                .from('broadcast')
-                .insert([{ message }]);
+.poppins-thin-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.poppins-extralight-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-light-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-regular-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.poppins-medium {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-medium-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppins-semibold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.poppins-bold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.poppins-bold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.poppins-extrabold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.poppins-extrabold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.poppins-black {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.poppins-black-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+
+
+        body{
+            background-color: #f97f7f;
+            font-family: "Poppins", sans-serif;
+        }
+        #iframe {
+            position: absolute;
+            width: 50%; /* Adjust the width as needed */
+            height: 100%; /* Set the height to fill the viewport */
+            top: 5rem;
+            right: 4%;
+        }
+        h1{
+            position: absolute;
+            top: -1rem;
+            left:35%;
+        }
+        #concert-info{
+            position: absolute;
+            top:20%;;
+        }
+        button{
+            position: absolute;
+            top:50%;
+        }
+        .start{
+            position: absolute;
+            left:10.5%;
+        }
+        .next{
+            left:5%;
+        }
+        .end {
+            left: 22%;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.30.0/dist/umd/supabase.min.js"></script>
+</head>
+
+<body>
+    <h1>Admin Console</h1>
+    <div id="concert-info">
+        <p><strong>İsim:</strong> <span id="name"></span></p>
+        <p><strong>Şarkılar:</strong></p>
+        <ul id="songs"></ul>
+        <p><strong>Sırada:</strong> <span id="next"></span></p>
+    </div>
+    
+    <button class="start" onclick="startConcert()">Start Concert</button>
+    <button class="end" onclick="end()">End Concert</button>
+    <button class="next" onclick="next()">Next</button>
+    
+    <iframe id="iframe" src="http://127.0.0.1:5500/recieve.html"></iframe>
+
+    <script>
+        const SUPABASE_URL = 'https://cdfzkwcluplyetqbuqmg.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkZnprd2NsdXBseWV0cWJ1cW1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxMzQ3MTksImV4cCI6MjAzMTcxMDcxOX0.HMxwvs7Vi2NH4-5uwAR561vtpZCDeOHc7uiS_cJAIuw';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const concertData = [
+            {
+            "isim": "İpek Gedik & Lina Göğüş -Piyano Duet-",
+            "şarkılar": [
+                "Piano Duet Op.149 No: 6 by A. Diabelli"
+            ],
+            "sirada": "Alin Diktaş -Piyano-"
+        },
+        {
+            "isim": "Alin Diktaş -Piyano-",
+            "şarkılar": [
+                "Marry Had a Little Lamb By: J. Thompson"
+            ],
+            "sirada": "Viana Şad -Piyano-"
+        },
+        {
+            "isim": "Viana Şad -Piyano-",
+            "şarkılar": [
+                "Gün Doğarken By: J. Thompson",
+                "Flea Waltz By: Anonymous"
+            ],
+            "sirada": "Nehir Neşe Okan -Piyano-"
+        },
+        {
+            "isim": "Nehir Neşe Okan -Piyano-",
+            "şarkılar": [
+                "Gayda Çalgıcıları By: J. Thompson"
+            ],
+            "sirada": "Beren Susuzlu -Piyano-"
+        },
+        {
+            "isim": "Beren Susuzlu -Piyano-",
+            "şarkılar": [
+                "Dilek Yıldızı By: J. Thompson",
+                "Düşmeden Dağa Tırmanalım By: J. Thompson"
+            ],
+            "sirada": "Özgü Lena Ferhanoğlu -Piyano-"
+        },
+        {
+            "isim": "Özgü Lena Ferhanoğlu -Piyano-",
+            "şarkılar": [
+                "Dansçı Ayı By: J. Thompson",
+                "Dev Adımlar By: J. Thompson",
+                "Neşeli Hindi By: J. Thompson"
+            ],
+            "sirada": "Asya Geniş -Piyano-"
+        },
+        {
+            "isim": "Asya Geniş -Piyano-",
+            "şarkılar": [
+                "Cancan By: J. Offenbach",
+                "When the Saints Go Marchin’ in By: Traditional"
+            ],
+            "sirada": "Defne İlter -Piyano-"
+        },
+        {
+            "isim": "Defne İlter -Piyano-",
+            "şarkılar": [
+                "Buz Patencisi By: J. Thompson",
+                "Bir Varmış Bir Yokmuş By: J. Thompson"
+            ],
+            "sirada": "Lara Aybar -Keman-"
+        },
+        {
+            "isim": "Lara Aybar -Keman-",
+            "şarkılar": [
+                "May Song By: S. Suzuki"
+            ],
+            "sirada": "Güneş Demir -Piyano-"
+        },
+        {
+            "isim": "Güneş Demir -Piyano-",
+            "şarkılar": [
+                "Skip to My Lou By: J. Thompson",
+                "Kızılderili Dansı By: J. Thompson",
+                "Peter and the Wolf Ateş Demir Eşliğinde By: S. Prokofiev"
+            ],
+            "sirada": "Selin Acer -Piyano-"
+        },
+        {
+            "isim": "Selin Acer -Piyano-",
+            "şarkılar": [
+                "Andante Grazioso By: W.A. Mozart",
+                "Cancan By: J. Offenbach",
+                "Polly Wolly Doodle Zeynep Acer Eşliğinde By: American Folk Song"
+            ],
+            "sirada": "Defne Bilge Ateş -Piyano-"
+        },
+        {
+            "isim": "Defne Bilge Ateş -Piyano-",
+            "şarkılar": [
+                "Scarborough Fair By: Traditional",
+                "Radetzky March By: J. Strauss"
+            ],
+            "sirada": "Aram Ronas Çetin -Piyano-"
+        },
+        {
+            "isim": "Aram Ronas Çetin -Piyano-",
+            "şarkılar": [
+                "Santa Lucia By: Traditional",
+                "Für Elise By: L.W. Beethoven"
+            ],
+            "sirada": "Ayka Blazhenkova -Keman-"
+        },
+        {
+            "isim": "Ayka Blazhenkova -Keman-",
+            "şarkılar": [
+                "Country Dance By: C.M. von Weber"
+            ],
+            "sirada": "Doğa Adebalı 😍-Piyano-"
+        },
+        {
+            "isim": "Doğa Adebalı 😍-Piyano-",
+            "şarkılar": [
+                "The Blue Danube Waltz By: J. Strauss",
+                "German Dance By: L.W. Beethoven",
+                "Turkish March (2. Piyano: Layra Bayraktar) By: L.W. Beethoven (Arr.H.G. Heumann)"
+            ],
+            "sirada": "Defne Kaygusuz -Piyano-"
+        },
+        {
+            "isim": "Defne Kaygusuz -Piyano-",
+            "şarkılar": [
+                "La Donna e Mobile “Rigoletto” By: G. Verdi",
+                "Dance in F Major By: W.A. Mozart"
+            ],
+            "sirada": "Layra Bayraktar -Piyano-"
+        },
+        {
+            "isim": "Layra Bayraktar -Piyano-",
+            "şarkılar": [
+                "March, from the opera “Carmen” By: G. Bizet",
+                "Arabesque By: F. Burgmüller"
+            ],
+            "sirada": "Noyan Okan -Piyano-"
+        },
+        {
+            "isim": "İpek Gedik -Piyano-",
+            "şarkılar": [
+                "The Marriage of Figaro By: W.A. Mozart",
+                "Rondo By: W.A. Mozart"
+            ],
+            "sirada": "Zeynep Acer -Piyano-"
+        },
+        {
+            "isim": "Noyan Okan -Piyano-",
+            "şarkılar": [
+                "Etud By: J.B. Duvernoy"
+            ],
+            "sirada": "Mehmet Cem Öztürk -Piyano-"
+        },
+        {
+            "isim": "Mehmet Cem Öztürk -Piyano-",
+            "şarkılar": [
+                "Tarantella Napolitana By: Anonymous",
+                "Rondo Alla Turca By: W.A. Mozart"
+            ],
+            "sirada": "İpek Gedik -Piyano-"
+        },
+        
+        {
+            "isim": "Zeynep Acer -Piyano-",
+            "şarkılar": [
+                "Küçük Rondo By: L.W. Beethoven",
+                "The Swan Lake By: P.I. Tchaikovsky"
+            ],
+            "sirada": "İpek Kuru -Piyano-"
+        },
+        {
+            "isim": "İpek Kuru -Piyano-",
+            "şarkılar": [
+                "Eine Kleine Nachtmusik By: W.A. Mozart",
+                "Hungarian Dance No. 5 By: J. Brahms"
+            ],
+            "sirada": "Ayka Blazhenkova -Keman-"
+        },
+        {
+            "isim": "Ayka Blazhenkova -Keman-",
+            "şarkılar": [
+                "Concerto in G Minor, Op. 12, No: 1. By: A. Vivaldi"
+            ],
+            "sirada": "Ateş Demir -Piyano-"
+        },
+        {
+            "isim": "Ateş Demir -Piyano-",
+            "şarkılar": [
+                "Merry Go Round of Life Ayka Blazhenkova-Keman- Eşliğinde By: J. Hisaishi",
+                "Dance Theme and Variation By: A. Scarlatti"
+            ],
+            "sirada": "Lara Aybar -Piyano-"
+        },
+        {
+            "isim": "Lara Aybar -Piyano-",
+            "şarkılar": [
+                "Waltz in A Minor, B 150. By: F. Chopin"
+            ],
+            "sirada": "Lina Göğüş -Piyano-"
+        },
+        {
+            "isim": "Lina Göğüş -Piyano-",
+            "şarkılar": [
+                "From the Motion Picture “Amelie” By: Y. Tiersen"
+            ],
+            "sirada": "Dila Okay -Piyano-"
+        },
+        {
+            "isim": "Dila Okay -Piyano-",
+            "şarkılar": [
+                "Nocturne No. 20, C Sharp Minor By: F. Chopin"
+            ],
+            "sirada": "Bitis"
+        }
+        ];
+
+        async function sendMessageToSupabase(message) {
+            const { data, error } = await supabaseClient.from('broadcast').insert([{ message }]);
+
             if (error) {
-                console.error('Error inserting message:', error.message);
+                console.error('Error sending message:', error.message);
+                return;
             }
         }
+
+        let currentIndex = 0;
+        let concertStarted = false;
+
+        function displayCurrentConcert() {
+            const currentConcert = concertData[currentIndex];
+            document.getElementById('name').textContent = currentConcert.isim;
+            document.getElementById('songs').innerHTML = currentConcert.şarkılar.map(song => `<li>${song}</li>`).join('');
+            document.getElementById('next').textContent = currentConcert.sirada;
+        }
+
+        async function startConcert() {
+            if (!concertStarted) {
+                const currentConcert = concertData[currentIndex];
+                await sendMessageToSupabase(JSON.stringify(currentConcert));
+                concertStarted = true;
+            }
+        }
+
+        async function end() {
+            sendMessageToSupabase("finito")
+        }
+
+        async function next() {
+            if (!concertStarted) {
+                return; 
+            }
+
+            const currentConcert = concertData[currentIndex];
+            await sendMessageToSupabase(JSON.stringify(currentConcert));
+            currentIndex++;
+
+            if (currentIndex >= concertData.length) {
+                alert('Program sona erdi!');
+                return;
+            }
+
+            displayCurrentConcert();
+        }
+
+        // Show initial concert
+        displayCurrentConcert();
     </script>
-</head>
-<body>
-    <h1>Send Message</h1>
-    <input type="text" id="message" placeholder="Enter your message">
-    <button onclick="sendMessage()">Submit</button>
 </body>
+
 </html>
