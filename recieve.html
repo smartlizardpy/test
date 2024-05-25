@@ -6,20 +6,63 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap" rel="stylesheet">
     <title>Receive Message</title>
     <style>
-       
+        .jacquard-12-regular {
+            font-family: "Jacquard 12", system-ui;
+            font-weight: 100;
+            font-style: normal;
+        }
+
         .ok {
-        font-family: "Quicksand", sans-serif;
-        font-optical-sizing: auto;
-        font-weight: 300;
-        font-style: normal;
-        }
-        #icerik{
             font-family: "Quicksand", sans-serif;
-        h1{
-             font-family: "Quicksand", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 300;
+            font-style: normal;
         }
+        body {
+            background-color: #fa4040;
+            margin: 0; /* Reset default margin */
+            padding: 0; /* Reset default padding */
+            color:#fafafa;
+        }
+        .ustyazi {
+            background-color: #ff6161;
+            overflow: hidden;
+        }
+        .ustyazi h2 {
+            color: #fafafa;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 20px;
+            margin: 0; /* Reset default margin */
+        }
+        #icerik ul{
+            position: absolute;
+            top:55%;
+            font-family: "Quicksand", sans-serif;
+            text-align: center;
+            left:24%;
+     
+        }
+        #icerik p{
+            position: absolute;
+            top:65%;
+            font-family: "Quicksand", sans-serif;
+            left:35%;
+     
+        }
+        h1{
+            position: absolute;
+            font-family: "Quicksand", sans-serif;
+            text-align: center;
+            top:25%;
+            left:30%;
+
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.30.0/dist/umd/supabase.min.js"></script>
@@ -53,11 +96,18 @@
                 const latestMessage = await fetchLatestMessage();
                 
                 if (!latestMessage || latestMessage === "No message found") {
-                    h1.textContent = 'Your Message Here';
+                    h1.textContent = 'Please wait to be seated';
                     icerikDiv.innerHTML = '';
                     return;
                 }
 
+                // Check if the message is "finito"
+                if (latestMessage === "finito") {
+                   h1.textContent = 'Konserimiz Bitmiştir geldiğiniz için hepinize teşekkür ederiz!';
+                   icerikDiv.innerHTML = '';
+                    return;
+                }
+                
                 h1.textContent = '';
 
                 // Parse JSON data and display content
@@ -94,10 +144,23 @@
                 })
                 .subscribe();
         });
+        
     </script>
 </head>
 <body>
+    <div class="ustyazi">
+        <h2>Your Text Here</h2>
+    </div>
     <h1 id="messageDisplay"></h1>
     <div id="icerik"></div>
+    <footer style='background-color: #ff6161; padding: 10px; text-align: center; position: absolute; top:90%;  width:100%;  font-family:"Jacquard 12", system-ui;font-size: 20px;' >
+        <p>&copy; <span id="currentYear"></span> Ozan Kaygusuz All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // JavaScript to dynamically update the year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+    
 </body>
 </html>
