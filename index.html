@@ -79,17 +79,20 @@
     </div>
     <div class="ortayazi">
         <h1>{Konser İsmi}'ne Hoşgeldiniz</h1>
-        <a href="#" onclick="openPdf('Konser Afisi_2024 (1).pdf')">Broşüre Gözat</a>
+        <a href="#" onclick="openPdf('Konser Afisi_2024 (1).pdf')">Broşür</a>
         <a href="recieve.html">Live View</a>
     </div>
+    <footer style='background-color: #ff6161; padding: 10px; text-align: center; position: absolute; top:90%;  width:100%;  font-family:"Jacquard 12", system-ui;font-size: 20px;' >
+        <p>&copy; <span id="currentYear"></span> Ozan Kaygusuz All rights reserved.</p>
+    </footer>
+    
+
     <!-- PDF Container -->
     <div id="pdfContainer">
         <button class="backButton" onclick="closePdf()">Back</button>
         <iframe id="pdfViewer" src="" frameborder="0"></iframe>
     </div>
-    <footer style='background-color: #ff6161; padding: 10px; text-align: center; position: absolute; top:90%;  width:100%;  font-family:"Jacquard 12", system-ui;font-size: 20px;' >
-        <p>&copy; <span id="currentYear"></span> Ozan Kaygusuz All rights reserved.</p>
-    </footer>
+
     <script>
         function openPdf(pdfUrl) {
             // Display the PDF container
