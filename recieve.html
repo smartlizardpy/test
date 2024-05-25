@@ -28,6 +28,7 @@
             margin: 0; /* Reset default margin */
             padding: 0; /* Reset default padding */
             color:#fafafa;
+            text-align: center;
         }
         .ustyazi {
             background-color: #ff6161;
@@ -41,29 +42,27 @@
             font-size: 20px;
             margin: 0; /* Reset default margin */
         }
-        #icerik ul{
-            position: absolute;
-            top:55%;
+            #icerik ul {
             font-family: "Quicksand", sans-serif;
             text-align: center;
-            left:24%;
-     
+            padding-left: 0;
+            list-style-type: none;
         }
-        #icerik p{
-            position: absolute;
-            top:65%;
-            font-family: "Quicksand", sans-serif;
-            left:35%;
-     
-        }
-        h1{
-            position: absolute;
+        #icerik p {
             font-family: "Quicksand", sans-serif;
             text-align: center;
-            top:25%;
-            left:30%;
+        }
+        #icerik{
+            position: absolute;
+            top:35%;
+        }
+        h1 {
+            font-family: "Quicksand", sans-serif;
+            text-align: center;
+           
+          
+        }
 
-        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.30.0/dist/umd/supabase.min.js"></script>
     <script>
@@ -103,10 +102,12 @@
 
                 // Check if the message is "finito"
                 if (latestMessage === "finito") {
-                   h1.textContent = 'Konserimiz Bitmiştir geldiğiniz için hepinize teşekkür ederiz!';
-                   icerikDiv.innerHTML = '';
-                    return;
-                }
+                    icerikDiv.innerHTML = '<h1>Konserimiz Bitmiştir, geldiğiniz için teşekkür ederiz.</h1> <iframe src="https://drive.google.com/embeddedfolderview?id=16zaUR5ckywIAUngYpIorKpF8clGZAejL#list" style="width:80%; height:300px; border:0;"></iframe>';
+                    h1.textContent = '';
+                return;
+            }
+
+
                 
                 h1.textContent = '';
 
